@@ -12,7 +12,6 @@ from spacy.matcher import Matcher
 from spacy import displacy
 
 app = Flask(__name__)
-from abc import *
 
 @app.route('/test', methods=['POST','GET'])
 def hello():
@@ -173,5 +172,5 @@ def index():
     return displayMatches(displacy_matches, labels_list)
     #return data
 
-app.run(host="127.0.0.1",port=8080)
+app.run()
 
