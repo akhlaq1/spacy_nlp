@@ -13,6 +13,10 @@ from spacy import displacy
 
 app = Flask(__name__)
 
+@app.route('/', methods=['GET'])
+def main_route():
+    return "<h1>App worked fine</h1>"
+
 @app.route('/test', methods=['POST','GET'])
 def hello():
     return render_template('hello.html')
@@ -172,5 +176,7 @@ def index():
     return displayMatches(displacy_matches, labels_list)
     #return data
 
-app.run()
+if __name__ == "__main__":
+    app.run()    
+
 
