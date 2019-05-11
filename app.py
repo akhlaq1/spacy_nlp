@@ -3,15 +3,32 @@ import pandas as pd
 import numpy as np
 import urllib.request
 import json
-from IPython.core.interactiveshell import InteractiveShell
-InteractiveShell.ast_node_interactivity = "all"
-from IPython.core.display import display, HTML
-display(HTML("<style>.container { width:100% !important; }</style>"))
 import spacy
 from spacy.matcher import Matcher
 from spacy import displacy
 
 app = Flask(__name__)
+
+## LOAD SPACY 
+nlp = spacy.load('en_core_web_sm')
+
+# LOAD TEXT DATA
+url = r'https://www.dropbox.com/s/6a1dgvyg04qztx5/df100.csv?dl=1'
+data = urllib.request.urlopen(url)
+df = pd.read_csv(data)
+data.close()
+# print('data loaded: ', df.shape)
+data_dict = df.iloc[:,1].to_dict() 
+
+## LOAD PATTERNS TO MATCH
+url = r'https://www.dropbox.com/s/9ozpb1bc4gqcd4h/hcat_v010.jsonl?dl=1'
+data = urllib.request.urlopen(url)
+data2 = data.readlines()
+patterns = []
+for line in data2:
+    patterns.append(json.loads(line))
+data.close()
+print('patterns loaded: ', len(patterns))
 
 @app.route('/', methods=['GET'])
 def main_route():
@@ -19,31 +36,10 @@ def main_route():
 
 @app.route('/test', methods=['POST','GET'])
 def hello():
-    return render_template('hello.html')
+    return render_template('hello.html', content = data_dict )
 
 @app.route('/output', methods=['POST','GET'])
 def index():
-    ## LOAD SPACY 
-    nlp = spacy.load('en_core_web_sm')
-
-    ## LOAD TEXT DATA
-    # url = r'https://www.dropbox.com/s/6a1dgvyg04qztx5/df100.csv?dl=1'
-    # data = urllib.request.urlopen(url)
-    # df = pd.read_csv(data)
-    # data.close()
-    # print('data loaded: ', df.shape)
-    # df.head(2)
-
-    ## LOAD PATTERNS TO MATCH
-    url = r'https://www.dropbox.com/s/9ozpb1bc4gqcd4h/hcat_v010.jsonl?dl=1'
-    data = urllib.request.urlopen(url)
-    data2 = data.readlines()
-    patterns = []
-    for line in data2:
-        patterns.append(json.loads(line))
-    data.close()
-    print('patterns loaded: ', len(patterns))
-
     ## FUNCTION TO ADD PATTERNS TO THE MATCHER
     def addPatternsToMatcher(patterns):
         # ADD PATTERNS TO THE MATCHER
@@ -74,9 +70,6 @@ def index():
 
     ## FUNCTION TO GET MATCHES
     def getMatches(post_id):
-        # get post_text from post_id
-        # post_text = df.loc[df['post_id']==post_id, 'post_body'].iloc[0]
-        # process post_text
         post_text = request.form['text1']
         doc = nlp(post_text)
         # apply the matcher
@@ -164,8 +157,6 @@ def index():
         html1 = displacy.render(displacy_matches, style='ent', page=True, manual=True, options=options)
         return html1
 
-
-
     ## DISPLAY MATCHES FOR TEXT
     text_id = 35
     matcher = Matcher(nlp.vocab) # initialize/reset the matcher
@@ -174,7 +165,6 @@ def index():
     displacy_matches, labels_list = formatMatchesForDisplacy(doc, matches)
     data = jsonify(displacy_matches)
     return displayMatches(displacy_matches, labels_list)
-    #return data
 
 if __name__ == "__main__":
     app.run()    

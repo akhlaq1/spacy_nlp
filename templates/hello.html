@@ -7,18 +7,51 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<style>
+
+</style>
+
 </head>
-<center>
-    <h1>Please enter text:</h1>
-    <form action="/output" method="POST">
-        <div class="form-group">
-        <div class="form-group" id="in1">
-        <textarea name="text1" cols="100" rows="10"></textarea>
+
+<center> 
+   <form action="/output" method="POST">
+        
+        <select style="position:relative;top:6vh;" onfocus="this.size=5;" onblur='this.size=1;' onchange='this.size=1; this.blur();' class="top-left" id="selectKey" name="abcd">
+            <option>Text ID:</option>
+        </select>
+        <br>
+        <br>
+<div style="position:relative;top:18vh;">
+        <div   class="form-group">
+        <div  class="form-group" id="in1">
+        <textarea id="box" name="text1" cols="100" rows="10" ></textarea>
         </div>
         <br>
         </div>
         <button type="submit" class="btn btn-secondary">Submit</button>
+    </div>
     </form>
 </center>
+
+    <script>
+        var select = document.getElementById("selectKey");
+            {% for key, value in content.items() %}
+                {
+                var val = {{key}};
+                var el = document.createElement("option");
+                el.textContent = val;
+                el.value = val;
+                select.appendChild(el);
+                };
+            {% endfor%}
+
+            function putIt(e) {
+                var c = {{content | tojson |safe }};
+                var target =  e.target.value;
+                $("#box").val(c[ target ]);
+            }
+
+            $("#selectKey").on("change", putIt);
+
+        </script>
 </html>
