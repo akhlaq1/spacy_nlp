@@ -7,14 +7,11 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-<style>
-
-</style>
 
 </head>
-
 <center> 
-   <form action="/output" method="POST">
+
+   <form action="http://localhost:5000/output" method="POST">
         
         <select style="position:relative;top:6vh;" onfocus="this.size=5;" onblur='this.size=1;' onchange='this.size=1; this.blur();' class="top-left" id="selectKey" name="abcd">
             <option>Text ID:</option>
@@ -24,7 +21,9 @@
 <div style="position:relative;top:18vh;">
         <div   class="form-group">
         <div  class="form-group" id="in1">
-        <textarea id="box" name="text1" cols="100" rows="10" ></textarea>
+
+        <textarea  class="form-control rounded-0" id="box" name="text1" cols="100" rows="10" style="width:55%;"></textarea>
+
         </div>
         <br>
         </div>
@@ -32,7 +31,6 @@
     </div>
     </form>
 </center>
-
     <script>
         var select = document.getElementById("selectKey");
             {% for key, value in content.items() %}

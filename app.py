@@ -30,10 +30,6 @@ for line in data2:
 data.close()
 print('patterns loaded: ', len(patterns))
 
-@app.route('/', methods=['GET'])
-def main_route():
-    return "<h1>App worked fine</h1>"
-
 @app.route('/test', methods=['POST','GET'])
 def hello():
     return render_template('hello.html', content = data_dict )
@@ -79,6 +75,8 @@ def index():
         return doc, matches
 
     ## FUNCTION TO FORMAT DISPLACY MATCHES
+
+
     def formatMatchesForDisplacy(doc, matches):
         # convert match object into displacy match object (using character, not word, position)
         displacy_matches = []
@@ -166,7 +164,12 @@ def index():
     data = jsonify(displacy_matches)
     return displayMatches(displacy_matches, labels_list)
 
-if __name__ == "__main__":
-    app.run()    
+app.run(port=5000)
 
-
+new_dict = {
+    'symbol':'ibm',
+    'full name':'international business machine',
+    'Revenue per Share':[56.4,	55.99, 58.85],
+    'EBITDA per Share':[10.01,	10.83,	11.96],
+    'Earnings per Share (Diluted)' :[4.38,	4.87, 6.11]
+}
