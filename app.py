@@ -30,6 +30,10 @@ for line in data2:
 data.close()
 print('patterns loaded: ', len(patterns))
 
+@app.route('/', methods=['GET'])
+def main_route():
+    return "<h1>App worked fine</h1>"
+
 @app.route('/test', methods=['POST','GET'])
 def hello():
     return render_template('hello.html', content = data_dict )
@@ -164,7 +168,6 @@ def index():
     data = jsonify(displacy_matches)
     return displayMatches(displacy_matches, labels_list)
 
-app.run(port=5000)
 
 new_dict = {
     'symbol':'ibm',
@@ -173,3 +176,6 @@ new_dict = {
     'EBITDA per Share':[10.01,	10.83,	11.96],
     'Earnings per Share (Diluted)' :[4.38,	4.87, 6.11]
 }
+if __name__ == "__main__":
+    app.run()    
+
